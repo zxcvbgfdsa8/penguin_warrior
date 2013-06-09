@@ -1,0 +1,26 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="assets/javascript/background.js"></script>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <canvas id="main" width="640" height="480" style="border:1px solid #000000;"></canvas>
+        <script>
+            var canvas = document.getElementById('main');
+            var ctx = canvas.getContext('2d');
+            initBackground();
+            var x = 0;
+            setInterval(function() {                
+                drawBackground(ctx, x, 0);
+                drawParallax(ctx, x, 0);
+                x++;
+            }, 1000/100);
+        </script>
+    </body>
+</html>

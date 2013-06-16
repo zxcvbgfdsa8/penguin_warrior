@@ -38,22 +38,48 @@ and open the template in the editor.
             window.addEventListener("keyup", window.keyboard.keyRelease.bind(window.keyboard));
             window.keyboard.keys[37] = 0;
             window.keyboard.keys[39] = 0;
+            window.keyboard.keys[38] = 0;
+            window.keyboard.keys[40] = 0;
             setInterval(function() {               
                 window.prevTimeTicks = window.currTimeTicks;
                 window.currTimeTicks = new Date().getTime();
-                window.timeScale = (window.currTimeTicks - window.prevTimeTicks) / 30.0;
-                
+                window.timeScale = (window.currTimeTicks - window.prevTimeTicks) / 30.0;     
+                var turn = 0;
                 if (window.keyboard.keys[37] !== 0) {
-                    window.player01.angle += 5;
+                    turn += 5;
                 }
                 if (window.keyboard.keys[39] !== 0) {
-                    window.player01.angle -= 5;                    
+                    turn -= 5;                    
                 }
+                window.player01.accel = 0;
+                if (window.keyboard.keys[38] !== 0) {
+                    window.player01.accel = 3;
+                }
+                if (window.keyboard.keys[40] !== 0) {
+                    window.player01.accel = -2;                    
+                }
+                window.player01.angle += turn * window.timeScale;
+                if (window.player01.angle < 0) window.player01.angle += 360;
+                if (window.player01.angle > 360) window.player01.angle -= 360;
+                
+                window.cameraX = window.player01.worldX - 640/2;
+                window.cameraY = window.player01.worldY - 480/2;
+
+                if (window.cameraX < 0) window.cameraX = 0;
+                if (window.cameraX >= 2000-640) {
+                    window.cameraX = 2000-640-1;
+                }
+                if (window.cameraY < 0) window.cameraY = 0;
+                if (window.cameraY >= 2000-480) {
+                    window.cameraY = 2000-480-1;
+                }
+
+                updatePlayer(window.player01);
+                
                 drawBackground();
                 drawParallax();                
                 drawPlayer(window.player01);
-                window.cameraX++;
-            }, 1000/10);
+            }, 1000/60);
             function initPlayer(player) {
                 //player.worldX = Math.random()*1000000 % 640;
                 //player.worldY = Math.random()*1000000 % 480;
@@ -65,6 +91,7 @@ and open the template in the editor.
                 player.charge = 0;
                 player.firing = 0;
                 player.shields = 100;
+                player.scire = 0;
             }
         </script>
     </body>

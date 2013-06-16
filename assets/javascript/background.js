@@ -30,12 +30,11 @@ function drawBackground() {
     var tileX, tileY;
     var startTileX, startTileY;
     
-    startTileX = (Math.floor(Math.floor((window.cameraX / parallaxBackFactor)) / tileWidth)) % parallaxGridWidth;
-    startTileY = ((window.cameraY / parallaxBackFactor) / tileHeight) % parallaxGridHeight;
+    startTileX = (Math.floor(Math.floor(window.cameraX / parallaxBackFactor) / tileWidth)) % parallaxGridWidth;
+    startTileY = (Math.floor(Math.floor(window.cameraY / parallaxBackFactor) / tileHeight)) % parallaxGridHeight;
 	
     startDrawX = -(Math.floor(window.cameraX/parallaxBackFactor) % tileWidth);
-    startDrawY = -((window.cameraY/parallaxBackFactor) % tileHeight);
-	
+    startDrawY = -(Math.floor(window.cameraY/parallaxBackFactor) % tileHeight);
     /* Use nested loops to scan down the screen, drawing rows of tiles. */
     tileY = startTileY;
     drawY = startDrawY;
@@ -72,12 +71,11 @@ function drawParallax() {
     var tileX, tileY;
     var startTileX, startTileY;
     
-    startTileX = (Math.floor(Math.floor((window.cameraX / parallaxFrontFactor)) / tileWidth)) % parallaxGridWidth;
-    startTileY = ((window.cameraY / parallaxFrontFactor) / tileHeight) % parallaxGridHeight;
+    startTileX = (Math.floor(Math.floor(window.cameraX / parallaxFrontFactor) / tileWidth)) % parallaxGridWidth;
+    startTileY = (Math.floor(Math.floor(window.cameraY / parallaxFrontFactor) / tileHeight)) % parallaxGridHeight;
 	
     startDrawX = -(Math.floor(window.cameraX/parallaxFrontFactor) % tileWidth);
-    startDrawY = -((window.cameraY/parallaxFrontFactor) % tileHeight);
-	
+    startDrawY = -(Math.floor(window.cameraY/parallaxFrontFactor) % tileHeight);    
     /* Use nested loops to scan down the screen, drawing rows of tiles. */
     tileY = startTileY;
     drawY = startDrawY;

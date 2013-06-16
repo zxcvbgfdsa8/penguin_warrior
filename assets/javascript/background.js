@@ -24,17 +24,17 @@ function initBackground() {
         }
     }
 }
-function drawBackground(ctx, cameraX, cameraY) {
+function drawBackground() {
     var drawX, drawY;
     var startDrawX, startDrawY;
     var tileX, tileY;
     var startTileX, startTileY;
     
-    startTileX = (Math.floor(Math.floor((cameraX / parallaxBackFactor)) / tileWidth)) % parallaxGridWidth;
-    startTileY = ((cameraY / parallaxBackFactor) / tileHeight) % parallaxGridHeight;
+    startTileX = (Math.floor(Math.floor((window.cameraX / parallaxBackFactor)) / tileWidth)) % parallaxGridWidth;
+    startTileY = ((window.cameraY / parallaxBackFactor) / tileHeight) % parallaxGridHeight;
 	
-    startDrawX = -(Math.floor(cameraX/parallaxBackFactor) % tileWidth);
-    startDrawY = -((cameraY/parallaxBackFactor) % tileHeight);
+    startDrawX = -(Math.floor(window.cameraX/parallaxBackFactor) % tileWidth);
+    startDrawY = -((window.cameraY/parallaxBackFactor) % tileHeight);
 	
     /* Use nested loops to scan down the screen, drawing rows of tiles. */
     tileY = startTileY;
@@ -44,18 +44,18 @@ function drawBackground(ctx, cameraX, cameraY) {
 	drawX = startDrawX;
 	while (drawX < 640) {
             // draw image to screen drawImage(imageObject, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight)
-            srcrect = {};
+            var srcrect = {};
 	    srcrect.x = tileWidth * backTiles[tileX][tileY];
 	    srcrect.y = 0;
 	    srcrect.w = tileWidth;
 	    srcrect.h = tileHeight;
             
-            destrect = {};
+            var destrect = {};
 	    destrect.x = drawX;
 	    destrect.y = drawY;
 	    destrect.w = tileWidth;
 	    destrect.h = tileHeight;			
-	    ctx.drawImage(imgBackTiles, srcrect.x, srcrect.y, srcrect.w, srcrect.h, destrect.x, destrect.y, destrect.w, destrect.h);
+	    window.ctx.drawImage(imgBackTiles, srcrect.x, srcrect.y, srcrect.w, srcrect.h, destrect.x, destrect.y, destrect.w, destrect.h);
                         
 	    tileX++;	
 	    tileX %= parallaxGridWidth;
@@ -66,17 +66,17 @@ function drawBackground(ctx, cameraX, cameraY) {
 	drawY += tileHeight;
     }
 }
-function drawParallax(ctx, cameraX, cameraY) {
+function drawParallax() {
     var drawX, drawY;
     var startDrawX, startDrawY;
     var tileX, tileY;
     var startTileX, startTileY;
     
-    startTileX = (Math.floor(Math.floor((cameraX / parallaxFrontFactor)) / tileWidth)) % parallaxGridWidth;
-    startTileY = ((cameraY / parallaxFrontFactor) / tileHeight) % parallaxGridHeight;
+    startTileX = (Math.floor(Math.floor((window.cameraX / parallaxFrontFactor)) / tileWidth)) % parallaxGridWidth;
+    startTileY = ((window.cameraY / parallaxFrontFactor) / tileHeight) % parallaxGridHeight;
 	
-    startDrawX = -(Math.floor(cameraX/parallaxFrontFactor) % tileWidth);
-    startDrawY = -((cameraY/parallaxFrontFactor) % tileHeight);
+    startDrawX = -(Math.floor(window.cameraX/parallaxFrontFactor) % tileWidth);
+    startDrawY = -((window.cameraY/parallaxFrontFactor) % tileHeight);
 	
     /* Use nested loops to scan down the screen, drawing rows of tiles. */
     tileY = startTileY;
@@ -97,7 +97,7 @@ function drawParallax(ctx, cameraX, cameraY) {
 	    destrect.y = drawY;
 	    destrect.w = tileWidth;
 	    destrect.h = tileHeight;			
-	    ctx.drawImage(imgFrontTiles, srcrect.x, srcrect.y, srcrect.w, srcrect.h, destrect.x, destrect.y, destrect.w, destrect.h);
+	    window.ctx.drawImage(imgFrontTiles, srcrect.x, srcrect.y, srcrect.w, srcrect.h, destrect.x, destrect.y, destrect.w, destrect.h);
                         
 	    tileX++;	
 	    tileX %= parallaxGridWidth;

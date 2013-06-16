@@ -6,6 +6,7 @@ and open the template in the editor.
 <html>
     <head>
         <script src="assets/javascript/background.js"></script>
+        <script src="assets/javascript/ship.js"></script>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
@@ -13,14 +14,58 @@ and open the template in the editor.
         <canvas id="main" width="640" height="480" style="border:1px solid #000000;"></canvas>
         <script>
             var canvas = document.getElementById('main');
-            var ctx = canvas.getContext('2d');
+            window.ctx = canvas.getContext('2d');
             initBackground();
             var x = 0;
-            setInterval(function() {                
-                drawBackground(ctx, x, 0);
-                drawParallax(ctx, x, 0);
-                x++;
-            }, 1000/100);
+            window.startTime = new Date().getTime();
+            window.prevTimeTicks = window.startTime;
+            window.currTimeTicks = window.startTime;  
+            window.cameraX = 0;
+            window.cameraY = 0;
+            window.player01 = {};
+            initPlayer(window.player01);
+            window.keyboard = {
+                keys : {},
+                keyPress : function (evt) {
+                    if (this.keys[evt.keyCode] > 0) { return; }
+                    this.keys[evt.keyCode] = evt.timeStamp || (new Date()).getTime();
+                },
+                keyRelease : function (evt) {
+                    this.keys[evt.keyCode] = 0;
+                }
+            };
+            window.addEventListener("keydown", window.keyboard.keyPress.bind(window.keyboard));
+            window.addEventListener("keyup", window.keyboard.keyRelease.bind(window.keyboard));
+            window.keyboard.keys[37] = 0;
+            window.keyboard.keys[39] = 0;
+            setInterval(function() {               
+                window.prevTimeTicks = window.currTimeTicks;
+                window.currTimeTicks = new Date().getTime();
+                window.timeScale = (window.currTimeTicks - window.prevTimeTicks) / 30.0;
+                
+                if (window.keyboard.keys[37] !== 0) {
+                    window.player01.angle += 5;
+                }
+                if (window.keyboard.keys[39] !== 0) {
+                    window.player01.angle -= 5;                    
+                }
+                drawBackground();
+                drawParallax();                
+                drawPlayer(window.player01);
+                window.cameraX++;
+            }, 1000/10);
+            function initPlayer(player) {
+                //player.worldX = Math.random()*1000000 % 640;
+                //player.worldY = Math.random()*1000000 % 480;
+                player.worldX = 100;
+                player.worldY = 100;
+                player.accel = 0;
+                player.velocity = 0;
+                player.angle = 0;
+                player.charge = 0;
+                player.firing = 0;
+                player.shields = 100;
+            }
         </script>
     </body>
 </html>

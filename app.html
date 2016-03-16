@@ -4,95 +4,100 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="assets/javascript/background.js"></script>
-        <script src="assets/javascript/ship.js"></script>
-        <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <canvas id="main" width="640" height="480" style="border:1px solid #000000;"></canvas>
-        <script>
-            var canvas = document.getElementById('main');
-            window.ctx = canvas.getContext('2d');
-            initBackground();
-            var x = 0;
-            window.startTime = new Date().getTime();
-            window.prevTimeTicks = window.startTime;
-            window.currTimeTicks = window.startTime;  
-            window.cameraX = 0;
-            window.cameraY = 0;
-            window.player01 = {};
-            initPlayer(window.player01);
-            window.keyboard = {
-                keys : {},
-                keyPress : function (evt) {
-                    if (this.keys[evt.keyCode] > 0) { return; }
-                    this.keys[evt.keyCode] = evt.timeStamp || (new Date()).getTime();
-                },
-                keyRelease : function (evt) {
-                    this.keys[evt.keyCode] = 0;
-                }
-            };
-            window.addEventListener("keydown", window.keyboard.keyPress.bind(window.keyboard));
-            window.addEventListener("keyup", window.keyboard.keyRelease.bind(window.keyboard));
-            window.keyboard.keys[37] = 0;
-            window.keyboard.keys[39] = 0;
-            window.keyboard.keys[38] = 0;
-            window.keyboard.keys[40] = 0;
-            setInterval(function() {               
-                window.prevTimeTicks = window.currTimeTicks;
-                window.currTimeTicks = new Date().getTime();
-                window.timeScale = (window.currTimeTicks - window.prevTimeTicks) / 30.0;     
-                var turn = 0;
-                if (window.keyboard.keys[37] !== 0) {
-                    turn += 5;
-                }
-                if (window.keyboard.keys[39] !== 0) {
-                    turn -= 5;                    
-                }
-                window.player01.accel = 0;
-                if (window.keyboard.keys[38] !== 0) {
-                    window.player01.accel = 3;
-                }
-                if (window.keyboard.keys[40] !== 0) {
-                    window.player01.accel = -2;                    
-                }
-                window.player01.angle += turn * window.timeScale;
-                if (window.player01.angle < 0) window.player01.angle += 360;
-                if (window.player01.angle > 360) window.player01.angle -= 360;
-                
-                window.cameraX = window.player01.worldX - 640/2;
-                window.cameraY = window.player01.worldY - 480/2;
-
-                if (window.cameraX < 0) window.cameraX = 0;
-                if (window.cameraX >= 2000-640) {
-                    window.cameraX = 2000-640-1;
-                }
-                if (window.cameraY < 0) window.cameraY = 0;
-                if (window.cameraY >= 2000-480) {
-                    window.cameraY = 2000-480-1;
-                }
-
-                updatePlayer(window.player01);
-                
-                drawBackground();
-                drawParallax();                
-                drawPlayer(window.player01);
-            }, 1000/60);
-            function initPlayer(player) {
-                //player.worldX = Math.random()*1000000 % 640;
-                //player.worldY = Math.random()*1000000 % 480;
-                player.worldX = 100;
-                player.worldY = 100;
-                player.accel = 0;
-                player.velocity = 0;
-                player.angle = 0;
-                player.charge = 0;
-                player.firing = 0;
-                player.shields = 100;
-                player.scire = 0;
+<head>
+    <script src="assets/javascript/background.js"></script>
+    <script src="assets/javascript/ship.js"></script>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<canvas id="main" width="640" height="480" style="border:1px solid #000000;"></canvas>
+<script>
+    var aud = new Audio();
+    aud.src = 'assets/audio/reflux.ogg';
+    aud.play();
+    var canvas = document.getElementById('main');
+    window.ctx = canvas.getContext('2d');
+    initBackground();
+    var x = 0;
+    window.startTime = new Date().getTime();
+    window.prevTimeTicks = window.startTime;
+    window.currTimeTicks = window.startTime;
+    window.cameraX = 0;
+    window.cameraY = 0;
+    window.player01 = {};
+    initPlayer(window.player01);
+    window.keyboard = {
+        keys: {},
+        keyPress: function (evt) {
+            if (this.keys[evt.keyCode] > 0) {
+                return;
             }
-        </script>
-    </body>
+            this.keys[evt.keyCode] = evt.timeStamp || (new Date()).getTime();
+        },
+        keyRelease: function (evt) {
+            this.keys[evt.keyCode] = 0;
+        }
+    };
+    window.addEventListener("keydown", window.keyboard.keyPress.bind(window.keyboard));
+    window.addEventListener("keyup", window.keyboard.keyRelease.bind(window.keyboard));
+    window.keyboard.keys[37] = 0;
+    window.keyboard.keys[39] = 0;
+    window.keyboard.keys[38] = 0;
+    window.keyboard.keys[40] = 0;
+    setInterval(function () {
+        window.prevTimeTicks = window.currTimeTicks;
+        window.currTimeTicks = new Date().getTime();
+        window.timeScale = (window.currTimeTicks - window.prevTimeTicks) / 30.0;
+        var turn = 0;
+        if (window.keyboard.keys[37] !== 0) {
+            turn += 5;
+        }
+        if (window.keyboard.keys[39] !== 0) {
+            turn -= 5;
+        }
+        window.player01.accel = 0;
+        if (window.keyboard.keys[38] !== 0) {
+            window.player01.accel = 3;
+        }
+        if (window.keyboard.keys[40] !== 0) {
+            window.player01.accel = -2;
+        }
+        window.player01.angle += turn * window.timeScale;
+        if (window.player01.angle < 0) window.player01.angle += 360;
+        if (window.player01.angle > 360) window.player01.angle -= 360;
+
+        window.cameraX = window.player01.worldX - 640 / 2;
+        window.cameraY = window.player01.worldY - 480 / 2;
+
+        if (window.cameraX < 0) window.cameraX = 0;
+        if (window.cameraX >= 2000 - 640) {
+            window.cameraX = 2000 - 640 - 1;
+        }
+        if (window.cameraY < 0) window.cameraY = 0;
+        if (window.cameraY >= 2000 - 480) {
+            window.cameraY = 2000 - 480 - 1;
+        }
+
+        updatePlayer(window.player01);
+
+        drawBackground();
+        drawParallax();
+        drawPlayer(window.player01);
+    }, 1000 / 60);
+    function initPlayer(player) {
+        //player.worldX = Math.random()*1000000 % 640;
+        //player.worldY = Math.random()*1000000 % 480;
+        player.worldX = 100;
+        player.worldY = 100;
+        player.accel = 0;
+        player.velocity = 0;
+        player.angle = 0;
+        player.charge = 0;
+        player.firing = 0;
+        player.shields = 100;
+        player.scire = 0;
+    }
+</script>
+</body>
 </html>
